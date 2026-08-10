@@ -1,0 +1,26 @@
+/* Additional custom CSS rules for Query-Pilot Dashboard */
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Custom scrollbars for table container */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0b1326;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2d3449;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #434655;
+}
