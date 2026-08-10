@@ -1,4 +1,17 @@
+# Environment variables
 .env
-venv/
+.env.*
+!.env.example
+
+# Python cache
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
