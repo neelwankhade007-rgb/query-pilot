@@ -5,6 +5,7 @@ from app.db.database import engine
 from app.services.query_service import execute_query
 from app.db.schema import get_database_schema
 from app.services.llm_service import generate_sql
+from app.services.sql_validator import validate_sql, SQLValidationError
 
 app = FastAPI()
 
@@ -20,8 +21,28 @@ def db_test():
 
 @app.get("/query-test")
 def query_test():
-    result = execute_query("SELECT * FROM customers")
-    return result
+    question = "Which customers bought a Laptop?"
+    
+    schema = get_database_schema()
+
+    generated_sql = generate_sql(question, schema)
+
+    try:
+        validated_sql = validate_sql(generated_sql)
+    except SQLValidationError as e:
+        return {
+            "question": question,
+            "sql": generated_sql,
+            "error": str(e)
+        }
+
+    result = execute_query(validated_sql)
+
+    return {
+        "question": question,
+        "sql": validated_sql,
+        "result": result
+    }
 
 @app.get("/schema")
 def schema_test():
