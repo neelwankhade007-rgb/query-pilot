@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+import logging
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from app.db.database import engine
@@ -6,8 +8,22 @@ from app.services.query_service import execute_query
 from app.db.schema import get_database_schema
 from app.services.llm_service import generate_sql
 from app.services.sql_validator import validate_sql, SQLValidationError
+from app.models.query import QueryRequest, QueryResponse
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+@app.exception_handler(SQLValidationError)
+def sql_validation_exception_handler(request: Request, exc: SQLValidationError):
+    logger.error(f"SQL Validation Error: {str(exc)}")
+    return JSONResponse(
+        status_code=400,
+        content={
+            "error": "Invalid SQL"
+        }
+    )
 
 @app.get("/")
 def root():
@@ -61,4 +77,22 @@ def generate_sql_test():
     return {
         "question": question,
         "sql": sql,
+    }
+
+@app.post("/query", response_model=QueryResponse)
+def query_database(request: QueryRequest):
+    question = request.question
+
+    schema = get_database_schema()
+
+    generated_sql = generate_sql(question, schema)
+
+    validated_sql = validate_sql(generated_sql, schema)
+
+    result = execute_query(validated_sql)
+
+    return {
+        "question": question,
+        "sql": validated_sql,
+        "result": result
     }
