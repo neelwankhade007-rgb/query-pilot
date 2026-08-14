@@ -130,6 +130,27 @@
             </div>
         </section>
 
+        <!-- Error Container -->
+        <div id="error-container" class="hidden bg-error-container/20 border border-error text-error p-md rounded-lg font-code-sm text-xs">
+            <span id="error-message"></span>
+        </div>
+
+        <!-- Translated Query Section -->
+        <section id="sql-section" class="flex flex-col gap-sm hidden">
+            <h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center justify-between">
+                <span class="flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-[14px] text-primary" data-icon="terminal">terminal</span>
+                    Translated SQL Query
+                </span>
+                <button id="copy-sql-btn" class="text-xs text-primary hover:underline cursor-pointer flex items-center gap-xs">
+                    <span class="material-symbols-outlined text-[14px]">content_copy</span> Copy
+                </button>
+            </h2>
+            <div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-md overflow-x-auto">
+                <code id="sql-code" class="font-code-md text-code-md text-secondary block whitespace-pre-wrap"></code>
+            </div>
+        </section>
+
         <!-- Divider -->
         <hr class="border-t border-surface-variant my-sm"/>
 

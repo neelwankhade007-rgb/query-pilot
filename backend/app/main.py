@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
@@ -15,13 +16,21 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.exception_handler(SQLValidationError)
 def sql_validation_exception_handler(request: Request, exc: SQLValidationError):
     logger.error(f"SQL Validation Error: {str(exc)}")
     return JSONResponse(
         status_code=400,
         content={
-            "error": "Invalid SQL"
+            "error": str(exc)
         }
     )
 
@@ -85,9 +94,22 @@ def query_database(request: QueryRequest):
 
     schema = get_database_schema()
 
-    generated_sql = generate_sql(question, schema)
+    try:
+        generated_sql = generate_sql(question, schema)
+    except ConnectionError as e:
+        logger.error(f"Ollama Connection Error: {str(e)}")
+        return JSONResponse(
+            status_code=503,
+            content={"error": "Failed to connect to Ollama. Please ensure Ollama is running (`ollama run qwen2.5-coder:7b`)."}
+        )
+    except Exception as e:
+        logger.error(f"LLM Generation Error: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"LLM Error: {str(e)}"}
+        )
 
-    validated_sql = validate_sql(generated_sql, schema)
+    validated_sql = validate_sql(generated_sql, schema, question)
 
     result = execute_query(validated_sql)
 

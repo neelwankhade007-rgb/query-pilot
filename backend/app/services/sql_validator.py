@@ -4,14 +4,39 @@ from sqlglot import exp
 class SQLValidationError(Exception):
     pass
 
-def validate_sql(sql: str, schema: dict) -> str:
+def check_question_intent(question: str):
+    if not question:
+        return
+    q_lower = question.lower().strip()
+    
+    mutation_verbs = ['delete', 'remove', 'drop', 'update', 'modify', 'insert', 'add', 'truncate', 'clear']
+    read_prefix = ('show', 'list', 'get', 'find', 'select', 'count', 'how many', 'which', 'what', 'display', 'view')
+    
+    is_read = q_lower.startswith(read_prefix)
+    
+    for verb in mutation_verbs:
+        if (q_lower.startswith(verb + ' ') or q_lower == verb or f' {verb} ' in f' {q_lower} ') and not is_read:
+            if verb in ['delete', 'remove', 'clear', 'truncate', 'drop']:
+                raise SQLValidationError("Cannot delete records: Only read-only SELECT queries are allowed.")
+            elif verb in ['update', 'modify']:
+                raise SQLValidationError("Cannot update records: Only read-only SELECT queries are allowed.")
+            elif verb in ['insert', 'add']:
+                raise SQLValidationError("Cannot insert records: Only read-only SELECT queries are allowed.")
+            else:
+                raise SQLValidationError("Cannot modify database: Only read-only SELECT queries are allowed.")
+
+def validate_sql(sql: str, schema: dict, question: str = "") -> str:
     """
     Validate that the generated SQL is:
-    1. Non-empty
-    2. A single statement
-    3. Read-only
-    4. Uses only tables that exist in the database schema
+    1. Intent is read-only
+    2. Non-empty
+    3. A single statement
+    4. Read-only
+    5. Uses only tables that exist in the database schema
     """
+
+    if question:
+        check_question_intent(question)
 
     if not sql or not sql.strip():
         raise SQLValidationError("Generated SQL is empty.")
@@ -19,7 +44,7 @@ def validate_sql(sql: str, schema: dict) -> str:
     try:
         statements = sqlglot.parse(sql, read="postgres")
     except sqlglot.errors.ParseError as e:
-        raise SQLValidationError(f"Invalid SQL: {e}")
+        raise SQLValidationError(f"Invalid SQL syntax: {e}")
     
     # Allowing one SQL statement for now.
     if len(statements) != 1:
@@ -29,9 +54,16 @@ def validate_sql(sql: str, schema: dict) -> str:
 
     # Only SELECT-style queries are allowed. 
     if not isinstance(statement, exp.Query):
-        raise SQLValidationError(
-            "Only read-only SELECT queries are allowed."
-        )
+        if isinstance(statement, exp.Delete):
+            raise SQLValidationError("Cannot delete records: Only read-only SELECT queries are allowed.")
+        elif isinstance(statement, exp.Update):
+            raise SQLValidationError("Cannot update records: Only read-only SELECT queries are allowed.")
+        elif isinstance(statement, exp.Insert):
+            raise SQLValidationError("Cannot insert records: Only read-only SELECT queries are allowed.")
+        elif isinstance(statement, (exp.Drop, exp.Create, exp.Alter)):
+            raise SQLValidationError("Cannot modify database schema: DROP, CREATE, and ALTER are not allowed.")
+        else:
+            raise SQLValidationError("Cannot modify database: Only read-only SELECT queries are allowed.")
     
     # Tables that actually exist in our database
     allowed_tables = set(schema.keys())
