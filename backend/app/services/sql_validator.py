@@ -1,5 +1,6 @@
 import sqlglot
-from sqlglot import exp 
+from sqlglot import exp
+from sqlglot.errors import ParseError
 
 class SQLValidationError(Exception):
     pass
@@ -43,7 +44,7 @@ def validate_sql(sql: str, schema: dict, question: str = "") -> str:
     
     try:
         statements = sqlglot.parse(sql, read="postgres")
-    except sqlglot.errors.ParseError as e:
+    except ParseError as e:
         raise SQLValidationError(f"Invalid SQL syntax: {e}")
     
     # Allowing one SQL statement for now.
