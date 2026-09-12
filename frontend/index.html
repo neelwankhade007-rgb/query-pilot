@@ -1,186 +1,323 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Query-Pilot Dashboard</title>
-    <link rel="icon" type="image/png" href="logo.png"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="styles.css"/>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-surface-variant": "#c3c6d7",
-                        "surface-bright": "#31394d",
-                        "on-secondary-container": "#00311f",
-                        "on-tertiary": "#472a00",
-                        "on-secondary-fixed-variant": "#005236",
-                        "tertiary-container": "#996100",
-                        "surface-container-highest": "#2d3449",
-                        "on-secondary-fixed": "#002113",
-                        "on-tertiary-container": "#ffeedd",
-                        "surface-container": "#171f33",
-                        "primary-fixed-dim": "#b4c5ff",
-                        "secondary": "#4edea3",
-                        "on-surface": "#dae2fd",
-                        "secondary-container": "#00a572",
-                        "on-primary-container": "#eeefff",
-                        "outline": "#8d90a0",
-                        "tertiary-fixed-dim": "#ffb95f",
-                        "surface-dim": "#0b1326",
-                        "tertiary-fixed": "#ffddb8",
-                        "secondary-fixed": "#6ffbbe",
-                        "on-primary-fixed-variant": "#003ea8",
-                        "primary-fixed": "#dbe1ff",
-                        "surface-container-high": "#222a3d",
-                        "surface-container-lowest": "#060e20",
-                        "surface": "#0b1326",
-                        "outline-variant": "#434655",
-                        "secondary-fixed-dim": "#4edea3",
-                        "on-primary-fixed": "#00174b",
-                        "inverse-on-surface": "#283044",
-                        "primary-container": "#2563eb",
-                        "on-error": "#690005",
-                        "on-tertiary-fixed-variant": "#653e00",
-                        "on-primary": "#002a78",
-                        "inverse-primary": "#0053db",
-                        "error": "#ffb4ab",
-                        "on-tertiary-fixed": "#2a1700",
-                        "inverse-surface": "#dae2fd",
-                        "on-background": "#dae2fd",
-                        "surface-variant": "#2d3449",
-                        "on-secondary": "#003824",
-                        "tertiary": "#ffb95f",
-                        "surface-container-low": "#131b2e",
-                        "primary": "#b4c5ff",
-                        "error-container": "#93000a",
-                        "surface-tint": "#b4c5ff",
-                        "background": "#0b1326",
-                        "on-error-container": "#ffdad6"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "gutter": "16px",
-                        "base": "4px",
-                        "sidebar-width": "260px",
-                        "xs": "4px",
-                        "lg": "24px",
-                        "xl": "40px",
-                        "md": "16px",
-                        "sm": "8px"
-                    },
-                    "fontFamily": {
-                        "label-caps": ["Inter"],
-                        "headline-sm": ["Inter"],
-                        "headline-md": ["Inter"],
-                        "code-sm": ["JetBrains Mono"],
-                        "display-lg": ["Inter"],
-                        "body-md": ["Inter"],
-                        "code-md": ["JetBrains Mono"],
-                        "body-lg": ["Inter"]
-                    },
-                    "fontSize": {
-                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
-                        "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
-                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-                        "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
-                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
-                        "code-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
-                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Query Pilot | Natural Language Data Intelligence</title>
+  <meta name="description" content="Upload CSV, JSON, or Excel datasets and query them effortlessly using natural language powered by local LLM and DuckDB." />
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="bg-background text-on-background min-h-screen flex items-center justify-center p-md md:p-xl font-body-md">
-    <div class="w-full max-w-4xl bg-surface-container rounded-xl border border-surface-variant shadow-2xl p-lg md:p-[40px] flex flex-col gap-lg">
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-sm">
-            <h1 class="font-headline-md text-headline-md text-primary tracking-tight">Query-Pilot</h1>
-            <div class="flex gap-sm">
-                <button id="settings-btn" class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">
-                    <span class="material-symbols-outlined" data-icon="settings">settings</span>
-                </button>
-            </div>
-        </header>
+<body>
+  <!-- Ambient background glow effects -->
+  <div class="glow-sphere glow-sphere-1"></div>
+  <div class="glow-sphere glow-sphere-2"></div>
+  <div class="glow-mesh"></div>
 
-        <!-- Query Input Section -->
-        <section class="flex flex-col gap-sm">
-            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="query-input">Ask your database...</label>
-            <div class="relative group">
-                <textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-md font-code-md text-code-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none shadow-inner" id="query-input" placeholder="Which customers bought ..." rows="4"></textarea>
-                <div class="absolute bottom-md right-md flex gap-sm items-center">
-                    <span class="text-xs text-outline font-code-sm hidden md:inline">⌘ + Enter to run</span>
-                    <button id="run-query-btn" class="bg-primary text-on-primary font-label-caps text-label-caps px-lg py-sm rounded-lg hover:opacity-90 active:opacity-80 transition-all flex items-center gap-xs cursor-pointer shadow-md shadow-primary/20">
-                        <span class="material-symbols-outlined text-[16px]" data-icon="play_arrow">play_arrow</span>
-                        Run Query
-                    </button>
-                </div>
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-badge">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="title-row">
+            <h1>Query Pilot</h1>
+            <span class="version-tag">v1.0</span>
+          </div>
+          <p class="subtitle">Natural Language Data Intelligence via DuckDB & Local LLM</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="pulse-indicator"></span>
+        <span id="backend-status-text">Engine Ready</span>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="main-content">
+      <!-- Left Column: Upload & Datasets -->
+      <aside class="sidebar-panel">
+        <!-- Upload Card -->
+        <section class="glass-card upload-section">
+          <div class="card-header">
+            <div class="icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
             </div>
+            <div>
+              <h2>Upload Dataset</h2>
+              <p class="card-desc">CSV, JSON, or Excel (up to 100MB)</p>
+            </div>
+          </div>
+
+          <div class="drop-zone" id="drop-zone">
+            <input type="file" id="file-input" accept=".csv,.json,.xlsx,.xls" hidden />
+            <div class="drop-content" id="drop-content">
+              <div class="cloud-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+                  <path d="M12 12v9"/>
+                  <path d="m16 16-4-4-4 4"/>
+                </svg>
+              </div>
+              <p class="drop-text">Drag & drop your file here, or <span class="browse-btn">browse</span></p>
+              <span class="file-types-hint">Supported: .csv, .json, .xlsx, .xls</span>
+            </div>
+            <div class="selected-file-info hidden" id="selected-file-info">
+              <span class="file-name-display" id="file-name-display">filename.csv</span>
+              <span class="file-size-display" id="file-size-display">0 KB</span>
+              <button class="btn-icon" id="remove-file-btn" title="Remove file">✕</button>
+            </div>
+          </div>
+
+          <button class="btn-primary full-width" id="upload-btn" disabled>
+            <span class="btn-text">Upload to DuckDB</span>
+            <span class="btn-spinner hidden" id="upload-spinner"></span>
+          </button>
         </section>
 
-        <!-- Error Container -->
-        <div id="error-container" class="hidden bg-error-container/20 border border-error text-error p-md rounded-lg font-code-sm text-xs">
-            <span id="error-message"></span>
+        <!-- Datasets List Card -->
+        <section class="glass-card datasets-section">
+          <div class="card-header between">
+            <div class="header-left">
+              <div class="icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+              </div>
+              <div>
+                <h2>Your Datasets</h2>
+                <p class="card-desc" id="dataset-count-desc">Loading...</p>
+              </div>
+            </div>
+            <button class="btn-ghost-icon" id="refresh-datasets-btn" title="Refresh dataset list">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="dataset-list-container" id="dataset-list">
+            <!-- Dynamic Dataset Items injected here -->
+            <div class="list-placeholder">
+              <span class="loading-dots">Fetching datasets</span>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <!-- Right Column: Active Dataset & Natural Language Query Workspace -->
+      <section class="workspace-panel">
+        <!-- Empty State (No dataset selected) -->
+        <div class="glass-card empty-workspace" id="empty-workspace">
+          <div class="empty-icon-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <path d="m11 8 3 3-3 3"/>
+            </svg>
+          </div>
+          <h3>No Dataset Selected</h3>
+          <p>Select a dataset from the list on the left, or upload a new one to start querying with natural language.</p>
         </div>
 
-        <!-- Translated Query Section -->
-        <section id="sql-section" class="flex flex-col gap-sm hidden">
-            <h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center justify-between">
-                <span class="flex items-center gap-xs">
-                    <span class="material-symbols-outlined text-[14px] text-primary" data-icon="terminal">terminal</span>
-                    Translated SQL Query
-                </span>
-                <button id="copy-sql-btn" class="text-xs text-primary hover:underline cursor-pointer flex items-center gap-xs">
-                    <span class="material-symbols-outlined text-[14px]">content_copy</span> Copy
-                </button>
-            </h2>
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-lg p-md overflow-x-auto">
-                <code id="sql-code" class="font-code-md text-code-md text-secondary block whitespace-pre-wrap"></code>
-            </div>
-        </section>
-
-        <!-- Divider -->
-        <hr class="border-t border-surface-variant my-sm"/>
-
-        <!-- Results Section -->
-        <section id="results-section" class="flex flex-col gap-sm">
-            <h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase flex items-center gap-xs">
-                <span class="material-symbols-outlined text-[14px] text-secondary" data-icon="auto_awesome">auto_awesome</span>
-                Results
-            </h2>
-            <div id="results-container" class="overflow-x-auto rounded-lg border border-surface-variant bg-surface-container-lowest min-h-[120px] flex items-center justify-center">
-                <div id="empty-state" class="text-on-surface-variant font-code-sm text-center py-lg px-md">
-                    No results yet. Enter a query above and click <span class="text-primary font-semibold">Run Query</span>.
+        <!-- Active Query Workspace (Shown when a dataset is selected) -->
+        <div class="workspace-active hidden" id="workspace-active">
+          <!-- Dataset Inspector Header Bar -->
+          <div class="glass-card active-dataset-banner">
+            <div class="dataset-meta-group">
+              <div class="dataset-active-badge">ACTIVE</div>
+              <div class="dataset-title-block">
+                <h2 id="active-dataset-name">dataset_name.csv</h2>
+                <div class="dataset-pills">
+                  <span class="pill pill-accent" id="active-dataset-rows">0 rows</span>
+                  <span class="pill pill-outline" id="active-dataset-type">CSV</span>
+                  <span class="pill pill-mono" id="active-dataset-table">table_name</span>
                 </div>
-                <table id="results-table" class="w-full text-left border-collapse hidden">
-                    <thead id="results-head" class="bg-surface-container-low border-b border-surface-variant font-label-caps text-label-caps text-on-surface-variant sticky top-0 backdrop-blur-sm">
-                        <!-- Dynamic columns header -->
-                    </thead>
-                    <tbody id="results-body" class="font-code-md text-code-md text-on-surface">
-                        <!-- Dynamic rows -->
-                    </tbody>
-                </table>
+              </div>
             </div>
-            <div id="results-stats" class="flex justify-between items-center mt-xs text-on-surface-variant font-code-sm text-code-sm hidden">
-                <span id="row-count"></span>
-                <span id="execution-time"></span>
-            </div>
-        </section>
-    </div>
+            <button class="btn-pill-action" id="toggle-schema-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+              <span>View Schema</span>
+            </button>
+          </div>
 
-    <script src="script.js"></script>
+          <!-- Collapsible Schema Preview -->
+          <div class="glass-card schema-drawer hidden" id="schema-drawer">
+            <div class="schema-header">
+              <h4>Dataset Schema & Columns</h4>
+            </div>
+            <div class="schema-tags" id="schema-tags">
+              <!-- Column pills injected dynamically -->
+            </div>
+          </div>
+
+          <!-- Query Input Card -->
+          <div class="glass-card query-card">
+            <div class="card-header">
+              <div class="icon-wrap ai-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Ask a Question in Plain English</h3>
+                <p class="card-desc">Query Pilot converts your question to SQL, runs it in DuckDB, and interprets the findings.</p>
+              </div>
+            </div>
+
+            <form id="query-form" class="query-form">
+              <div class="input-container">
+                <textarea 
+                  id="query-input" 
+                  rows="2" 
+                  placeholder="e.g. Which employees earn more than 80,000 and what is their average age?"
+                  required
+                ></textarea>
+                <div class="query-actions">
+                  <button type="submit" class="btn-ask" id="ask-btn">
+                    <span class="ask-text">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                      </svg>
+                      Ask Query Pilot
+                    </span>
+                    <span class="ask-loading hidden" id="ask-loading">
+                      <span class="mini-spinner"></span>
+                      <span>Thinking & Querying...</span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <!-- Quick Suggestions -->
+            <div class="quick-prompts">
+              <span class="qp-label">Suggestions:</span>
+              <button class="qp-btn" data-query="Show me the first 5 records">Show first 5 records</button>
+              <button class="qp-btn" data-query="Count total rows and summarize key columns">Summarize dataset</button>
+              <button class="qp-btn" data-query="What are the highest and lowest values?">Min & Max values</button>
+            </div>
+          </div>
+
+          <!-- Live Progress Banner when Query is Running -->
+          <div class="glass-card query-progress-card hidden" id="query-progress-card">
+            <div class="progress-indicator">
+              <div class="radar-spinner"></div>
+              <div class="progress-details">
+                <h4 id="progress-step-title">Translating Question to SQL...</h4>
+                <p id="progress-step-desc">Ollama (qwen2.5) is analyzing the dataset schema to build an optimized query.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Query Error Box -->
+          <div class="glass-card error-card hidden" id="error-card">
+            <div class="error-header">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <h4 id="error-title">Query Processing Error</h4>
+            </div>
+            <p id="error-message">Something went wrong.</p>
+          </div>
+
+          <!-- Query Results Display -->
+          <div class="results-container hidden" id="results-container">
+            <!-- Natural Language Interpretation Card -->
+            <div class="glass-card result-card answer-card">
+              <div class="result-card-header">
+                <div class="badge-ai-response">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  Natural Language Interpretation
+                </div>
+                <button class="btn-copy" id="copy-answer-btn" title="Copy answer">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  Copy
+                </button>
+              </div>
+              <div class="answer-content" id="answer-content">
+                <!-- LLM response rendered here -->
+              </div>
+            </div>
+
+            <!-- Generated SQL Card -->
+            <div class="glass-card result-card sql-card">
+              <div class="result-card-header between">
+                <div class="sql-title-tag">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"/>
+                    <polyline points="8 6 2 12 8 18"/>
+                  </svg>
+                  Generated SQL Query (DuckDB)
+                </div>
+                <button class="btn-copy" id="copy-sql-btn" title="Copy SQL">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  Copy SQL
+                </button>
+              </div>
+              <pre class="sql-code-block"><code id="sql-code">SELECT * FROM dataset;</code></pre>
+            </div>
+
+            <!-- Tabular Query Result Card -->
+            <div class="glass-card result-card table-card">
+              <div class="result-card-header between">
+                <div class="data-result-tag">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                  <span>Raw Result</span>
+                  <span class="row-count-badge" id="table-row-count">0 rows</span>
+                </div>
+              </div>
+              <div class="table-scroll-wrapper" id="table-scroll-wrapper">
+                <table class="data-table" id="data-table">
+                  <thead id="data-table-head"></thead>
+                  <tbody id="data-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/script.js"></script>
 </body>
 </html>

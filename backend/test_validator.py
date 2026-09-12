@@ -1,27 +1,26 @@
-from app.services.sql_validator import validate_sql, SQLValidationError
+from app.services.sql_validator import validate_sql
 
-schema = {
-    "customers": {},
-    "products": {},
-    "orders": {}
-}
 
-def test_valid_table():
-    sql = "SELECT * FROM customers"
+table_name = "dataset_5a4dedf1_ae7d_4dc9_8e0f_a8426deb79ea"
 
-    result = validate_sql(sql, schema)
 
-    print("ALLOWED:", result)
+tests = [
+    f"SELECT * FROM {table_name} WHERE Salary > 60000",
 
-def test_unknown_table():
-    sql = "SELECT * FROM imaginary_table"
+    f"DELETE FROM {table_name}",
 
-    try:
-        validate_sql(sql, schema)
-        print("ERROR: Unknown table was allowed!")
-    except SQLValidationError as e:
-        print("REJECTED:", e)
+    f"DROP TABLE {table_name}",
 
-if __name__ == "__main__":
-    test_valid_table()
-    test_unknown_table()
+    f"SELECT * FROM {table_name}; DELETE FROM {table_name}",
+
+    "SELECT * FROM employees"
+]
+
+
+for sql in tests:
+
+    valid, message = validate_sql(sql, table_name)
+
+    print("\nSQL:", sql)
+    print("Valid:", valid)
+    print("Message:", message)
